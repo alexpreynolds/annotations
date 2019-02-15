@@ -8,16 +8,16 @@ This project is an Expressjs and Redis-backed annotations web service with autoc
 ** [Redis](#redis)
 ** [PM2](#pm2)
 
-## Setup {#setup}
+## Setup
 
-### Ubuntu {#ubuntu}
+### Ubuntu
 
 ```
 dpkg --clear-selections
 sudo dpkg --set-selections < ubuntu_package_list.txt
 ```
 
-### Nodejs {#nodejs}
+### Nodejs
 
 ```
 cd ~
@@ -29,7 +29,7 @@ sudo ln -s ${PWD}/npm /usr/bin/npm
 sudo ln -s ${PWD}/npx /usr/bin/npx
 ```
 
-### Redis {#redis}
+### Redis
 
 #### Installation
 
@@ -173,7 +173,7 @@ $ redis-cli
 PONG
 ```
 
-### PM2 {#pm2}
+### PM2
 
 ```
 npm install pm2@latest -g

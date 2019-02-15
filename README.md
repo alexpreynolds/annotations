@@ -14,9 +14,9 @@ sudo dpkg --set-selections < ubuntu_package_list.txt
 
 ```
 cd ~
-wget -qO- https://nodejs.org/dist/v11.1.0/node-v11.1.0-linux-x64.tar.xz > node-v11.1.0-linux-x64.tar.xz
-tar xvf node-v11.1.0-linux-x64.tar.xz
-cd node-v11.1.0-linux-x64/bin
+wget -qO- https://nodejs.org/dist/v11.10.0/node-v11.10.0-linux-x64.tar.xz > node-v11.10.0-linux-x64.tar.xz
+tar xvf node-v11.10.0-linux-x64.tar.xz
+cd node-v11.10.0-linux-x64/bin
 sudo ln -s ${PWD}/node /usr/bin/node
 sudo ln -s ${PWD}/npm /usr/bin/npm
 sudo ln -s ${PWD}/npx /usr/bin/npx

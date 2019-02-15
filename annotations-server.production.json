@@ -1,0 +1,17 @@
+{
+  apps : [
+    {
+      name: "annotations-server (development)",
+      script: "npm run dev",
+      interpreter: "none",
+      watch: false,
+      cwd: "/home/ubuntu/annotations",
+      env: {
+        "DEBUG": "annotations-server:*",
+        "PORT": 8081,
+        "NODE_ENV": "production",
+        "HOST": "ip-172-31-30-219.us-east-2.compute.internal"
+      }
+    }
+  ]
+}

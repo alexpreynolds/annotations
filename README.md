@@ -116,7 +116,7 @@ $ sudo emacs /etc/redis/6379.conf
 
 Add key-value pairs:
 
-````
+```
 daemonize yes
 pidfile /var/run/redis_6379.pid
 logfile /var/log/redis_6379.log

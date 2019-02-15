@@ -1,16 +1,23 @@
 # annotations
-Annotations service
 
-## Setup
+This project is an Expressjs and Redis-backed annotations web service with autocomplete functionality. A React component will be included for demonstration of use of the backend service with a frontend application.
 
-### Ubuntu packages
+* [Setup](#setup)
+** [Ubuntu](#ubuntu)
+** [Nodejs](#nodejs)
+** [Redis](#redis)
+** [PM2](#pm2)
+
+## Setup {#setup}
+
+### Ubuntu {#ubuntu}
 
 ```
 dpkg --clear-selections
 sudo dpkg --set-selections < ubuntu_package_list.txt
 ```
 
-### Nodejs
+### Nodejs {#nodejs}
 
 ```
 cd ~
@@ -22,7 +29,7 @@ sudo ln -s ${PWD}/npm /usr/bin/npm
 sudo ln -s ${PWD}/npx /usr/bin/npx
 ```
 
-### Redis
+### Redis {#redis}
 
 #### Installation
 
@@ -166,7 +173,7 @@ $ redis-cli
 PONG
 ```
 
-### PM2
+### PM2 {#pm2}
 
 ```
 npm install pm2@latest -g

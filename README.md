@@ -2,11 +2,11 @@
 
 This project is an Expressjs and Redis-backed annotations web service with autocomplete functionality. A React component will be included for demonstration of use of the backend service with a frontend application.
 
-* [Setup](#setup)
-** [Ubuntu](#ubuntu)
-** [Nodejs](#nodejs)
-** [Redis](#redis)
-** [PM2](#pm2)
+- [Setup](#setup)
+  1. [Ubuntu](#ubuntu)
+  2. [Nodejs](#nodejs)
+  3. [Redis](#redis)
+  4. [PM2](#pm2)
 
 ## Setup
 

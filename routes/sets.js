@@ -143,6 +143,9 @@ router.get('/', cors(corsOptions), function(req, res, next) {
           // repackage per-key metadata
           let hgetResults = hgetPromisesResults.map((value) => {
             let obj = JSON.parse(value);
+            if (obj == null) {
+              throw new Error("No metadata available");
+            }
             let objRepackaged = {
               'id': obj.id,
               'description': obj.description,
@@ -349,8 +352,13 @@ router.get('/', cors(corsOptions), function(req, res, next) {
           }
         })
         .catch((errs) => {
-          console.log('hgets errors:', errs);
-          return res.status(500).send(errs);
+          //console.log('hgets errors:', errs);
+          if (errs.message === "No metadata available") {
+            return res.status(404).send(errs);
+          }
+          else {
+            return res.status(500).send(errs);
+          }
         });
     })
     .catch((errs) => {

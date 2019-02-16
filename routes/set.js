@@ -91,6 +91,9 @@ router.delete('/', cors(corsOptions), function(req, res, next) {
   
   let zrangeAidForDeletionPromise = zrangePromisified(temporaryAidKey, 0, -1)
     .then((members) => {
+      if (members.length == 0) {
+        throw new Error("No zrange result found for specified temporary AID key", temporaryAidKey);
+      }
       console.log("[" + req.query.id + "] annotation ID members from [" + temporaryAidKey + "] deleted");
       return members;
     })
@@ -127,9 +130,13 @@ router.delete('/', cors(corsOptions), function(req, res, next) {
   
   const zrangeAidForDeletionTasks = [renameAidForDeletionPromise, zrangeAidForDeletionPromise];
   return zrangeAidForDeletionTasks.reduce((promiseChain, currentTask) => {
-    return promiseChain.then((chainResults) => currentTask.then(currentResult => [ ...chainResults, currentResult ]))
+    return promiseChain
+      .then((chainResults) => currentTask.then(currentResult => [ ...chainResults, currentResult ]) )
   }, Promise.resolve([]))
     .then((values) => {
+      if (values[0].code && values[0].code === "ERR") {
+        throw new Error("No identifier found");
+      }
       // values will be aid-<ID>'s items
       let zrangeAidItemPromises = String(values).split(',').map((aidItem) => {
         return zremAidItemPromise(aidItem);
@@ -223,7 +230,10 @@ router.delete('/', cors(corsOptions), function(req, res, next) {
         });
     })
     .catch((errs) => {
-      console.log('zrange errors:', errs);
+      //console.log('zrange errors:', errs);
+      if (errs.message === "No identifier found") {
+        return res.status(404).send(errs);
+      }
       return res.status(500).send(errs);
     });
 });
@@ -258,6 +268,10 @@ router.get('/', cors(corsOptions), function(req, res, next) {
       .then((hgetPromisesResults) => {
         // package per-key metadata
         let hgetResults = hgetPromisesResults.map((value) => {
+          if (!value) {
+            // return 404
+            return res.status(404).send('No metadata available for specified identifier.');
+          }
           return JSON.parse(value);
         });
         let packagedMd = { 'metadata' : hgetResults };

@@ -306,7 +306,7 @@ To have `pm2` start on boot with the current tasks running:
 sudo pm2 startup
 ```
 
-A test request for a list of annotation sets (detailed [below](#sets)) should return an empty set and a 200 status code, *e.g.*:
+A test request for a list of annotation sets (detailed [below](#sets)) should return an empty object ("empty set") and a 404 error code, *e.g.*:
 
 ```
 $ curl -v "http://localhost:8000/sets"
@@ -318,9 +318,9 @@ $ curl -v "http://localhost:8000/sets"
 > User-Agent: curl/7.58.0
 > Accept: */*
 > 
-< HTTP/1.1 200 OK
+< HTTP/1.1 404 Not Found
 < Server: nginx/1.14.0 (Ubuntu)
-< Date: Fri, 15 Feb 2019 23:21:50 GMT
+< Date: Fri, 15 Feb 2019 23:50:19 GMT
 < Content-Type: application/json; charset=utf-8
 < Content-Length: 2
 < Connection: keep-alive
@@ -336,7 +336,7 @@ $ curl -v "http://localhost:8000/sets"
 
 Web requests to the annotations service are the means by which annotations are added, deleted, and queried.
 
-For purposes of this application, we define a group of annotations as a "set". Multiple groups are called "sets". 
+For purposes of this application, we define a group of annotations as a "set". Examples of such groups might be GENCODE or dbSNP annotations of a particular version. Multiple groups are called "sets". 
 
 Requests are performed on a `set` or on `sets`.
 
@@ -365,7 +365,7 @@ curl -X "DELETE" "http://localhost:8000/set?id=280dd7d0-2771-413a-9840-a16a25330
 A new set can be uploaded via the `POST` method, with specified form properties:
 
 ```
-curl -F 'annotationFile=@/home/ubuntu/annotations/public/assets/myAnnotations.bed' \
+curl -F 'annotationFile=@/path/to/myAnnotations.bed' \
      -F 'annotationDescription="myAnnotations"' \
      -F 'annotationVersion=1' \
      -F 'annotationAssembly="hg38"' \

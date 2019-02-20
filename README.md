@@ -351,18 +351,38 @@ Requests are performed on a `set` or on `sets`.
 A new set can be uploaded via the `POST` method, with specified form properties:
 
 ```
-curl -F 'annotationFile=@/path/to/myAnnotations.bed' \
-     -F 'annotationDescription="myAnnotations"' \
-     -F 'annotationVersion=1' \
-     -F 'annotationAssembly="hg38"' \
-     -F 'annotationType="bed12"' \
-     -F 'annotationTimestamp=1548189087529' \
-     "http://localhost:8000/set"
+$ curl -s -F 'annotationFile=@/home/ubuntu/annotations/public/assets/knownGene.hg19.bed12' \
+          -F 'annotationDescription="RefSeq (hg19)"' \
+          -F 'annotationVersion=1' \
+          -F 'annotationAssembly="hg19"' \
+          -F 'annotationTimestamp=1548189087529' \
+          -F 'annotationType="bed12"' \
+          "http://localhost:8000/set"
+{
+  "id": "87f7211d-23cc-414b-8d71-59282788ef4c",
+  "description": "RefSeq (hg19)",
+  "version": "1",
+  "assembly": "hg19",
+  "type": "bed12",
+  "uri": "file:///home/ubuntu/annotations-server-assets/87f7211d-23cc-414b-8d71-59282788ef4c/coordinates.bed",
+  "created": "1548189087529"
+}
 ```
 
 The file being uploaded should be a minimally BED4 file, where the fourth column is the annotation name. The annotation service will store fields up to the twelfth column (*i.e.*, a BED12 file).
 
-A full description of form properties will be provided in a future revision of this document.
+Note: Unless the form properties are malformed or incomplete, the request will immediately return a 200 status code with the metadata payload describing the set being processed. The actual processing of annotations may take some time for the upload to the backend database to actually complete. Use the [Sets](#sets) queries to check on available datasets.
+
+##### Form properties
+
+An HTTP form `POST` submission should include the following properties:
+
+1. `annotationFile=@<path>`, where `<path>` specifies the absolute path to the annotation file
+2. `annotationDescription=<description>`, where `<description>` provides a string to describe the annotation set
+3. `annotationVersion=<version>`, where `<version>` is a string that versions the annotation set
+4. `annotationAssembly=<assembly>`, where `<assembly>` describes the genome assembly associated with the set
+5. `annotationTimestamp=<timestamp>`, where `<timestamp>` is an integer that measures time, in seconds-since-UNIX-epoch
+6. `annotationType=<type>`, where `<type>` represents the type or format of annotations contained within the set (at this time, `bed12` is the only appropriate choice)
 
 #### Get the properties of an existing set
 

@@ -359,7 +359,7 @@ router.get('/', cors(corsOptions), function(req, res, next) {
             }
           }
           else {
-            //res.status(204).send();
+            // this is just a GET request for all the metadata associated with sets; no query parameters
             res.json(packagedResponse);
           }
         })

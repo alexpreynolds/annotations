@@ -11,6 +11,7 @@ Annotations can be added, removed, and queried via standard web request idioms. 
   2. [Nodejs](#nodejs)
   3. [Redis](#redis)
   4. [PM2](#pm2)
+  
 - [Requests](#requests)
   1. [Set](#set)
   2. [Sets](#sets)
@@ -18,6 +19,8 @@ Annotations can be added, removed, and queried via standard web request idioms. 
 ## Setup
 
 ### Ubuntu
+
+Install dependencies:
 
 ```
 sudo dpkg --clear-selections

@@ -345,25 +345,7 @@ Requests are performed on a `set` or on `sets`.
 
 ### Set
 
-#### List set properties
-
-Given a set with the unique identifier `280dd7d0-2771-413a-9840-a16a25330072`, its metadata can be retrieved via a `GET` method request, *e.g.*:
-
-```
-curl "http://localhost:8000/set?id=280dd7d0-2771-413a-9840-a16a25330072"
-```
-
-If the given identifier does not refer back to an existing set, a 404 error is returned.
-
-#### Delete
-
-Given a set with the unique identifier `280dd7d0-2771-413a-9840-a16a25330072`, its annotations and metadata can be deleted via the `DELETE` method, *e.g.*:
-
-```
-curl -X "DELETE" "http://localhost:8000/set?id=280dd7d0-2771-413a-9840-a16a25330072"
-```
-
-#### Add
+#### Add a new set
 
 A new set can be uploaded via the `POST` method, with specified form properties:
 
@@ -379,6 +361,26 @@ curl -F 'annotationFile=@/path/to/myAnnotations.bed' \
 The file being uploaded should be a minimally BED4 file, where the fourth column is the annotation name. The annotation service will store fields up to the twelfth column (*i.e.*, a BED12 file).
 
 A full description of form properties will be provided in a future revision of this document.
+
+#### Get the properties of an existing set
+
+Given a set with the unique identifier `280dd7d0-2771-413a-9840-a16a25330072`, its metadata can be retrieved via a `GET` method request, *e.g.*:
+
+```
+curl "http://localhost:8000/set?id=280dd7d0-2771-413a-9840-a16a25330072"
+```
+
+If the given identifier does not refer back to an existing set, a 404 error is returned.
+
+#### Delete an existing set
+
+Given a set with the unique identifier `280dd7d0-2771-413a-9840-a16a25330072`, its annotations and metadata can be deleted via the `DELETE` method, *e.g.*:
+
+```
+curl -X "DELETE" "http://localhost:8000/set?id=280dd7d0-2771-413a-9840-a16a25330072"
+```
+
+If the set does not already exist, this request will return a 404 error.
 
 ### Sets
 

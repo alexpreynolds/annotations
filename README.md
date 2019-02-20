@@ -51,6 +51,7 @@ sudo ln -s ${PWD}/npx /usr/bin/npx
 
 ```
 cd ~
+pip3 install redis
 sudo apt-get install -y tk8.5
 wget http://download.redis.io/redis-stable.tar.gz
 tar xvzf redis-stable.tar.gz
@@ -354,6 +355,7 @@ curl -F 'annotationFile=@/path/to/myAnnotations.bed' \
      -F 'annotationDescription="myAnnotations"' \
      -F 'annotationVersion=1' \
      -F 'annotationAssembly="hg38"' \
+     -F 'annotationType="bed12"' \
      -F 'annotationTimestamp=1548189087529' \
      "http://localhost:8000/set"
 ```

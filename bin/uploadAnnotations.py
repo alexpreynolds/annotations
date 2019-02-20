@@ -33,6 +33,7 @@ try:
   annotation_description = annotations_md['description']
   annotation_version = annotations_md['version']
   annotation_assembly = annotations_md['assembly']
+  annotation_type = annotations_md['type']
   annotations_uri = up.urlparse(annotations_md['uri'])
   annotations_path = annotations_uri.path
 except KeyError as e:

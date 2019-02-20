@@ -292,7 +292,10 @@ router.get('/', cors(corsOptions), function(req, res, next) {
 // POST example: 
 //
 // $ curl -F 'annotationFile=@/home/ubuntu/annotations-server/public/assets/refGene.hg38.c1t4u.bed' \
-//        -F 'annotationDescription="refGene"' -F 'annotationVersion=1' -F 'annotationAssembly="hg38"' \
+//        -F 'annotationDescription="refGene"' \
+//        -F 'annotationVersion=1' \
+//        -F 'annotationAssembly="hg38"' \
+//        -F 'annotationType="bed12"' \
 //        -F 'annotationTimestamp=1548189087529' http://localhost:8000/set
 //
 
@@ -339,6 +342,7 @@ router.post('/', cors(corsOptions), function(req, res) {
     "description" : req.body.annotationDescription,
     "version" :     req.body.annotationVersion,
     "assembly" :    req.body.annotationAssembly,
+    "type" :        req.body.annotationType,
     "uri" :         fileUrl(destAnnotationFile), 
     "created" :     req.body.annotationTimestamp,
   };

@@ -51,6 +51,7 @@ router.get('/', cors(corsOptions), function(req, res, next) {
   //   \"description\": \"test2\", 
   //   \"version\": \"1\", 
   //   \"assembly\": \"hg38\", 
+  //   \"type\" : \"bed12\",
   //   \"uri\": \"file:///home/ubuntu/epilogos/epilogos-annotations/assets/fa4f225c-69ea-423f-8129-9364df20b306/coordinates.bed\", 
   //   \"created\": \"1544654122629\"
   // }"
@@ -151,11 +152,13 @@ router.get('/', cors(corsOptions), function(req, res, next) {
               'description': obj.description,
               'version': obj.version,
               'assembly': obj.assembly,
+              'type': obj.type,
               'created': obj.created
             };
             return objRepackaged;
           });
-          let packagedResponse = { 'metadata' : hgetResults };          
+          let packagedResponse = { 'metadata' : hgetResults };
+          //console.log("packagedResponse", packagedResponse);
           if (Object.keys(req.query).length !== 0) {
             // filter hgetResults
             let filteredHgetResults = hgetResults;
@@ -173,6 +176,14 @@ router.get('/', cors(corsOptions), function(req, res, next) {
               //console.log("filtering by version...");
               filteredHgetResults = filteredHgetResults.filter((value) => {
                 return value.version === req.query.version;
+              });
+            }
+            
+            // filter by type
+            if (req.query.type) {
+              //console.log("filtering by type...");
+              filteredHgetResults = filteredHgetResults.filter((value) => {
+                return value.type === req.query.type;
               });
             }
             
@@ -348,7 +359,8 @@ router.get('/', cors(corsOptions), function(req, res, next) {
             }
           }
           else {
-            res.status(204).send();
+            //res.status(204).send();
+            res.json(packagedResponse);
           }
         })
         .catch((errs) => {

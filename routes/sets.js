@@ -249,6 +249,8 @@ router.get('/', cors(corsOptions), function(req, res, next) {
                 zrankAidPromises.push(zrankAidPromise(aidKey, req.query.q))
               });
               
+              hmgetAnnotationNamePromises = [];
+              
               Promise.all(zrankAidPromises)
                 .then((zrankAidPromisesResults) => {
 
@@ -286,18 +288,20 @@ router.get('/', cors(corsOptions), function(req, res, next) {
                             end = start + constants.MAX_QUERY_STEP_COUNT - 1;
                             return next(aidKey, start, end, pastRange);
                           }
+                          return results;
                         })
                         .catch((err) => {
                           console.log('zrank aid-<ID> + query prefix error:', err);
                         });
                     }
                     
-                    function packageMatchDetails(matches, assembly, package) {
-                      let hmgetAnnotationNamePromises = [];
+                    function packageMatchDetails(matches, assembly, package, nameMatchPromises) {
+                      //let hmgetAnnotationNamePromises = [];
                       let results = [];
                       matches.forEach((match) => {
                         let p = hmgetAnnotationNamePromise(match, assembly)
                           .then((hmgetResults) => {
+                            //console.log("hmgetResults", hmgetResults);
                             let name = hmgetResults[0];
                             let hits = JSON.parse(hmgetResults[1]);
                             let result = {};
@@ -308,33 +312,41 @@ router.get('/', cors(corsOptions), function(req, res, next) {
                             console.log('hmget annotationName + assembly query error:', err);
                             return res.status(500).send(err);
                           });
-                        hmgetAnnotationNamePromises.push(p);
+                        //hmgetAnnotationNamePromises.push(p);
+                        nameMatchPromises.push(p);
                       })
-                      Promise.all(hmgetAnnotationNamePromises)
-                        .then((hmgetPromisesResults) => {
-                          let flattenedResults = Object.assign(...hmgetPromisesResults);
-                          package['hits'] = flattenedResults;
-                          res.setHeader('Content-Type', 'application/json');
-                          res.send(JSON.stringify(package));
-                        })
-                        .catch((err) => {
-                          console.log('hmget all query error:', err);
-                          return res.status(500).send(err);
-                        })
                     }
                     
+                    function resolveNameMatchPromises(package, nameMatchPromises) {
+                      setTimeout(() => {
+                        Promise.all(nameMatchPromises)
+                          .then((results) => {
+                            let flattenedResults = Object.assign(...results);
+                            package['hits'] = flattenedResults;
+                            //console.log("package", package);
+                            res.json(package);
+                          })
+                          .catch((err) => {
+                            console.log('hmget all query error:', err);
+                            return res.status(500).send(err);
+                          });
+                      })
+                    }
+
                     if (start) {
                       next(aidKey, start, end, pastRange)
                         .then((result) => {
-                          //console.log('next result is past range:', pastRange, results, zrankAidPromisesResult);
                           let matches = results.slice(0);
                           let assembly = req.query.assembly || constants.DEFAULT_ASSEMBLY;
+                          //console.log("matches", aidKey, matches);
                           zrankAidPromisesResult["matches"] = matches;
                           packagedSearch.push(zrankAidPromisesResult);
-                          //console.log("packagedSearch", packagedSearch);
+                          let package = { 'metadata' : filteredHgetResults, 'search' : packagedSearch, 'hits' : packagedHits };
+                          packageMatchDetails(matches, assembly, package, hmgetAnnotationNamePromises);
                           if (idx == arr.length - 1) {
-                            let package = { 'metadata' : filteredHgetResults, 'search' : packagedSearch, 'hits' : packagedHits };
-                            packageMatchDetails(matches, assembly, package);
+                            setTimeout(() => {
+                              resolveNameMatchPromises(package, hmgetAnnotationNamePromises);
+                            });
                           }
                         })
                         .catch((err) => {
@@ -343,15 +355,18 @@ router.get('/', cors(corsOptions), function(req, res, next) {
                         });
                     }
                     else {
-                      packagedResponse = { 'metadata' : filteredHgetResults, 'search' : packagedSearch, 'hits' : packagedHits };
-                      res.setHeader('Content-Type', 'application/json');
-                      res.send(JSON.stringify(packagedResponse));
+                      if (idx == arr.length - 1) {
+                        setTimeout(() => {
+                          let package = { 'metadata' : filteredHgetResults, 'search' : packagedSearch, 'hits' : packagedHits };
+                          resolveNameMatchPromises(package, hmgetAnnotationNamePromises);
+                        })                        
+                      }
                     }
                   });
                 })
                 .catch((errs) => {
                   console.log('zrank aid-<ID> + query prefix errors:', errs);
-                  results.push(errs);
+                  //return res.status(500).send(errs);
                 });
             }
             else {

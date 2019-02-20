@@ -13,5 +13,5 @@ module.exports = Object.freeze({
     MIN_QUERY_PREFIX_LENGTH:        2,
     MAX_QUERY_RESULT_COUNT:         100,
     MAX_QUERY_STEP_COUNT:           50,
-    DEFAULT_ASSEMBLY:               'hg38',
+    DEFAULT_ASSEMBLY:               'hg19',
 });

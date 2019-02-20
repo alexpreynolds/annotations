@@ -382,7 +382,7 @@ An HTTP form `POST` submission should include the following properties:
 3. `annotationVersion=<version>`, where `<version>` is a string that versions the annotation set
 4. `annotationAssembly=<assembly>`, where `<assembly>` describes the genome assembly associated with the set
 5. `annotationTimestamp=<timestamp>`, where `<timestamp>` is an integer that measures time, in seconds-since-UNIX-epoch
-6. `annotationType=<type>`, where `<type>` represents the type or format of annotations contained within the set (at this time, `bed12` is the only appropriate choice)
+6. `annotationType=<type>`, where `<type>` represents the type or format of annotations contained within the set (*e.g.*, `bed`, `bed4`, `bed12`, etc.)
 
 #### Get the properties of an existing set
 

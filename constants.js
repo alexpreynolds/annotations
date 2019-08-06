@@ -1,6 +1,6 @@
-var path = require('path');
+const path = require('path');
 
-var assetsDir = path.join(__dirname, '../annotations-server-assets');
+const assetsDir = path.join(__dirname, '../annotations-server-assets');
 
 module.exports = Object.freeze({
     HOST:                           '18.191.132.31',

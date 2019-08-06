@@ -44,7 +44,6 @@ let whitelist = ['http://epilogos.altius.org',
 		 'https://' + constants.HOST,
 		 'https://' + constants.HOST + ':3000',
 		 'https://' + constants.HOST + ':8000'];
-//let whitelist = ['http://epilogos.altius.org', 'http://epilogos.altius.org:3000', 'http://' + constants.HOST, 'http://' + constants.HOST + ':3000', 'http://' + constants.HOST + ':8000'];
 let corsOptions = {
   origin: function (origin, callback) {
     if (origin === undefined || whitelist.indexOf(origin) !== -1) {
@@ -64,6 +63,15 @@ let corsOptions = {
 //
 
 router.delete('/', cors(corsOptions), function(req, res, next) {
+  const deletionOriginHeader = req.get('origin');
+  const deletionWhitelist = ['http://' + constants.HOST,
+                             'http://localhost',
+                             'https://' + constants.HOST,
+                             'https://localhost'];
+  if (deletionWhitelist.indexOf(deletionOriginHeader) === -1) {
+    return res.status(403).send('DELETE request must come from localhost.');
+  }
+  
   if (!req.query || !req.query.id) {
     return res.status(400).send('No parameters were specified.');
   }
@@ -309,7 +317,15 @@ router.get('/', cors(corsOptions), function(req, res, next) {
 //        -F 'annotationTimestamp=1548189087529' http://localhost:8000/set
 //
 
-router.post('/', cors(corsOptions), function(req, res) {  
+router.post('/', cors(corsOptions), function(req, res) {
+  const postOriginHeader = req.get('origin');
+  const postWhitelist = ['http://' + constants.HOST,
+                         'http://localhost',
+                         'https://' + constants.HOST,
+                         'https://localhost'];
+  if (postWhitelist.indexOf(postOriginHeader) === -1) {
+    return res.status(403).send('POST request must come from localhost.');
+  }
   
   req.connection.setTimeout(100000);
   

@@ -27,7 +27,6 @@ let whitelist = ['http://epilogos.altius.org',
 		 'https://' + constants.HOST,
 		 'https://' + constants.HOST + ':3000',
 		 'https://' + constants.HOST + ':8000'];
-//let whitelist = ['http://epilogos.altius.org', 'http://epilogos.altius.org:3000', 'http://' + constants.HOST, 'http://' + constants.HOST + ':3000', 'http://' + constants.HOST + ':8000'];
 let corsOptions = {
   origin: function (origin, callback) {
     if (origin === undefined || whitelist.indexOf(origin) !== -1) {

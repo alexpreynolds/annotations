@@ -3,7 +3,7 @@ var path = require('path');
 var assetsDir = path.join(__dirname, '../annotations-server-assets');
 
 module.exports = Object.freeze({
-    HOST:                           'ec2-52-15-159-92.us-east-2.compute.amazonaws.com',
+    HOST:                           '18.191.132.31',
     ASSETS:                         assetsDir,
     REDIS_MD_KEY:                   'metadata',
     REDIS_MD_ID_PREFIX_KEY:         'md-',

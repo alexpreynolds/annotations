@@ -17,7 +17,17 @@ const hmgetPromisified = promisify(redisClient.hmget).bind(redisClient);
 //
 
 let cors = require('cors');
-let whitelist = ['http://epilogos.altius.org', 'http://epilogos.altius.org:3000', 'http://' + constants.HOST, 'http://' + constants.HOST + ':3000', 'http://' + constants.HOST + ':8000'];
+let whitelist = ['http://epilogos.altius.org',
+		 'http://epilogos.altius.org:3000',
+		 'https://epilogos.altius.org',
+		 'https://epilogos.altius.org:3000',
+		 'http://' + constants.HOST,
+		 'http://' + constants.HOST + ':3000',
+		 'http://' + constants.HOST + ':8000',
+		 'https://' + constants.HOST,
+		 'https://' + constants.HOST + ':3000',
+		 'https://' + constants.HOST + ':8000'];
+//let whitelist = ['http://epilogos.altius.org', 'http://epilogos.altius.org:3000', 'http://' + constants.HOST, 'http://' + constants.HOST + ':3000', 'http://' + constants.HOST + ':8000'];
 let corsOptions = {
   origin: function (origin, callback) {
     if (origin === undefined || whitelist.indexOf(origin) !== -1) {
@@ -86,9 +96,9 @@ router.get('/', cors(corsOptions), function(req, res, next) {
   let hmgetAnnotationNamePromise = (annotationName, assembly) => {
     return hmgetPromisified(annotationName, assembly)
       .then((hmgetRes) => {
-        //console.log("annotationName", annotationName);
-        //console.log("assembly", assembly);
-        //console.log("hmgetRes", hmgetRes);
+        console.log("annotationName", annotationName);
+        console.log("assembly", assembly);
+        console.log("hmgetRes", hmgetRes);
         return [annotationName, hmgetRes];
       })
       .catch((err) => {
@@ -301,12 +311,14 @@ router.get('/', cors(corsOptions), function(req, res, next) {
                       matches.forEach((match) => {
                         let p = hmgetAnnotationNamePromise(match, assembly)
                           .then((hmgetResults) => {
-                            //console.log("hmgetResults", hmgetResults);
-                            let name = hmgetResults[0];
-                            let hits = JSON.parse(hmgetResults[1]);
-                            let result = {};
-                            result[name] = hits;
-                            return result;
+                            console.log("hmgetResults", hmgetResults);
+                            if (hmgetResults[1]) {
+                              let name = hmgetResults[0];
+                              let hits = JSON.parse(hmgetResults[1]);
+                              let result = {};
+                              result[name] = hits;
+                              return result;
+                            }
                           })
                           .catch((err) => {
                             console.log('hmget annotationName + assembly query error:', err);
@@ -321,6 +333,7 @@ router.get('/', cors(corsOptions), function(req, res, next) {
                       setTimeout(() => {
                         Promise.all(nameMatchPromises)
                           .then((results) => {
+                            //console.log("results", results);
                             let flattenedResults = Object.assign(...results);
                             package['hits'] = flattenedResults;
                             //console.log("package", package);
@@ -338,7 +351,7 @@ router.get('/', cors(corsOptions), function(req, res, next) {
                         .then((result) => {
                           let matches = results.slice(0);
                           let assembly = req.query.assembly || constants.DEFAULT_ASSEMBLY;
-                          //console.log("matches", aidKey, matches);
+                          console.log("matches", aidKey, matches);
                           zrankAidPromisesResult["matches"] = matches;
                           packagedSearch.push(zrankAidPromisesResult);
                           let package = { 'metadata' : filteredHgetResults, 'search' : packagedSearch, 'hits' : packagedHits };

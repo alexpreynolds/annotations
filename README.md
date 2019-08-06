@@ -74,6 +74,7 @@ Add:
 
 ```
 vm.overcommit_memory = 1
+vm.swappiness = 0
 ```
 
 Edit `rc.local`:
@@ -88,6 +89,29 @@ Add:
 echo never > /sys/kernel/mm/transparent_hugepage/enabled
 ```
 
+Create a swap partition:
+
+```
+sudo fallocate -l 4G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile 
+sudo swapon /swapfile
+sudo swapon -s
+```
+
+Edit `fstab`:
+
+```
+sudo emacs /etc/fstab
+```
+
+Add:
+
+```
+/swapfile	none	swap	sw	0	0
+```
+
+to persist the swap partition between boots.
 
 Reboot:
 
@@ -101,7 +125,7 @@ $ sudo shutdown -r now
 Configure `~/redis-stable/redis.conf` and add key-value pairs:
 
 ```
-maxmemory 8gb
+maxmemory 1gb
 maxmemory-policy allkeys-lru
 ```
 
